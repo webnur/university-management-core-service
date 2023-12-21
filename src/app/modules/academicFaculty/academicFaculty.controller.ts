@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
+import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
+import { academicFacultyFilterableFields } from './academicFaculty.constants';
 import { AcademicFacultyService } from './academicFaculty.service';
 
 const createFaculty = catchAsync(async (req: Request, res: Response) => {
@@ -16,7 +18,14 @@ const createFaculty = catchAsync(async (req: Request, res: Response) => {
 
 const getAllAcademicFaculty = catchAsync(
   async (req: Request, res: Response) => {
-    const result = await AcademicFacultyService.getAllAcademicFaculty();
+    const filters = pick(req.query, academicFacultyFilterableFields);
+    const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
+    console.log('filters data', filters);
+    console.log('options data', options);
+    const result = await AcademicFacultyService.getAllAcademicFaculty(
+      filters,
+      options
+    );
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
