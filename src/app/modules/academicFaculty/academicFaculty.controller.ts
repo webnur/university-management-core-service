@@ -30,7 +30,8 @@ const getAllAcademicFaculty = catchAsync(
       statusCode: httpStatus.OK,
       success: true,
       message: 'get all academic Faculty successfully!',
-      data: result,
+      meta: result.meta,
+      data: result.data,
     });
   }
 );
