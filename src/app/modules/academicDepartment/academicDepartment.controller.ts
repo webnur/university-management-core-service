@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
+import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
 import { AcademicDepartmentService } from './academicDepartment.service';
+import { academicDepartmentFilterableFields } from './academocDepartmet.constants';
 
 const createDepartment = catchAsync(async (req: Request, res: Response) => {
   const result = await AcademicDepartmentService.createDepartment(req.body);
@@ -17,12 +19,18 @@ const createDepartment = catchAsync(async (req: Request, res: Response) => {
 
 const getAllAcademicDepartment = catchAsync(
   async (req: Request, res: Response) => {
-    const result = await AcademicDepartmentService.getAllAcademicDepartment();
+    const filters = pick(req.query, academicDepartmentFilterableFields);
+    const options = pick(req.query, ['page', 'limit', 'sortBy', 'sortOrder']);
+    const result = await AcademicDepartmentService.getAllAcademicDepartment(
+      filters,
+      options
+    );
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
       message: 'get all academic Faculty successfully!',
-      data: result,
+      meta: result.meta,
+      data: result.data,
     });
   }
 );
