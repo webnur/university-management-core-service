@@ -107,9 +107,21 @@ const updateStudent = async (
   return result;
 };
 
+const deleteStudent = async (id: string): Promise<Student> => {
+  const result = await prisma.student.delete({
+    where: { id },
+    include: {
+      academicDepartment: true,
+      academicSemester: true,
+      academicFaculty: true,
+    },
+  });
+  return result;
+};
 export const StudentService = {
   createStudent,
   getAllStudent,
   getSingleStudent,
   updateStudent,
+  deleteStudent,
 };
