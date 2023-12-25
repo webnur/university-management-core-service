@@ -2,7 +2,11 @@ import { Course } from '@prisma/client';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
 import prisma from '../../../shared/prisma';
-import { ICourseCreateData } from './course.interface';
+import { asyncForEach } from '../../../shared/utils';
+import {
+  ICourseCreateData,
+  IPrerequisiteCourseRequest,
+} from './course.interface';
 
 const createCourse = async (data: ICourseCreateData): Promise<any> => {
   const { preRequisiteCourses, ...courseData } = data;
@@ -19,16 +23,29 @@ const createCourse = async (data: ICourseCreateData): Promise<any> => {
     }
 
     if (preRequisiteCourses && preRequisiteCourses.length > 0) {
-      for (let index = 0; index < preRequisiteCourses.length; index++) {
-        const createPreRequisite =
-          await transactionClinet.courseToPrerequisite.create({
-            data: {
-              courseId: result.id,
-              prerequisiteId: preRequisiteCourses[index].courseId,
-            },
-          });
-        console.log(createPreRequisite);
-      }
+      //   for (let index = 0; index < preRequisiteCourses.length; index++) {
+      //     const createPreRequisite =
+      //       await transactionClinet.courseToPrerequisite.create({
+      //         data: {
+      //           courseId: result.id,
+      //           prerequisiteId: preRequisiteCourses[index].courseId,
+      //         },
+      //       });
+      //     console.log(createPreRequisite);
+      //   }
+      await asyncForEach(
+        preRequisiteCourses,
+        async (preRequisiteCourse: IPrerequisiteCourseRequest) => {
+          const createPrerequisite =
+            await transactionClinet.courseToPrerequisite.create({
+              data: {
+                courseId: result.id,
+                prerequisiteId: preRequisiteCourse.courseId,
+              },
+            });
+          console.log(createPrerequisite);
+        }
+      );
     }
     return result;
   });
@@ -88,29 +105,59 @@ const updateCourse = async (
           coursePrerequisite.courseId && !coursePrerequisite.isDeleted
       );
 
-      for (let index = 0; index < deletePrerequisite.length; index++) {
-        await transactionClient.courseToPrerequisite.deleteMany({
-          where: {
-            AND: [
-              {
-                courseId: id,
-              },
-              {
-                prerequisiteId: deletePrerequisite[index].courseId,
-              },
-            ],
-          },
-        });
-      }
+      await asyncForEach(
+        deletePrerequisite,
+        async (deletePreCourse: IPrerequisiteCourseRequest) => {
+          await transactionClient.courseToPrerequisite.deleteMany({
+            where: {
+              AND: [
+                {
+                  courseId: id,
+                },
+                {
+                  prerequisiteId: deletePreCourse.courseId,
+                },
+              ],
+            },
+          });
+        }
+      );
 
-      for (let index = 0; index < newPrerequisite.length; index++) {
-        await transactionClient.courseToPrerequisite.create({
-          data: {
-            courseId: id,
-            prerequisiteId: newPrerequisite[index].courseId,
-          },
-        });
-      }
+      //   for (let index = 0; index < deletePrerequisite.length; index++) {
+      //     await transactionClient.courseToPrerequisite.deleteMany({
+      //       where: {
+      //         AND: [
+      //           {
+      //             courseId: id,
+      //           },
+      //           {
+      //             prerequisiteId: deletePrerequisite[index].courseId,
+      //           },
+      //         ],
+      //       },
+      //     });
+      //   }
+
+      await asyncForEach(
+        newPrerequisite,
+        async (insertPrerequisite: IPrerequisiteCourseRequest) => {
+          await transactionClient.courseToPrerequisite.create({
+            data: {
+              courseId: id,
+              prerequisiteId: insertPrerequisite.courseId,
+            },
+          });
+        }
+      );
+
+      //   for (let index = 0; index < newPrerequisite.length; index++) {
+      //     await transactionClient.courseToPrerequisite.create({
+      //       data: {
+      //         courseId: id,
+      //         prerequisiteId: newPrerequisite[index].courseId,
+      //       },
+      //     });
+      //   }
     }
 
     return result;
