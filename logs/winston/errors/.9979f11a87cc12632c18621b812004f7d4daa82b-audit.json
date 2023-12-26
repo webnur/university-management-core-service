@@ -194,6 +194,11 @@
             "date": 1703494576277,
             "name": "C:\\level two course\\explore-microservices\\university-management-core-service-starter\\logs\\winston\\errors\\phu-2023-25-12-14-error.log",
             "hash": "d79fcca23da8015c0b9dbc02aca13bb028d204f72d42497064df19cc7cacd86f"
+        },
+        {
+            "date": 1703545768079,
+            "name": "C:\\level two course\\explore-microservices\\university-management-core-service-starter\\logs\\winston\\errors\\phu-2023-26-12-05-error.log",
+            "hash": "77aa1f371671a7a3e89fac02b35d2d30377ec891f8256ad0abb7e1efded529fe"
         }
     ],
     "hashType": "sha256"
