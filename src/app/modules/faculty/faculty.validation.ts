@@ -39,6 +39,15 @@ const create = z.object({
   }),
 });
 
+const assignOrRemoveCoruses = z.object({
+  body: z.object({
+    courses: z.array(z.string(), {
+      required_error: 'Courses is required',
+    }),
+  }),
+});
+
 export const FacultyValidation = {
   create,
+  assignOrRemoveCoruses,
 };
