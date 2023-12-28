@@ -259,6 +259,16 @@
             "date": 1703670316692,
             "name": "C:\\level two course\\explore-microservices\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2023-27-12-15-success.log",
             "hash": "a8c7832c0b5c152e3d6f5baaee89b6e45ceb93ce588fe02db9dafdb75c7ac69d"
+        },
+        {
+            "date": 1703723798609,
+            "name": "C:\\level two course\\explore-microservices\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2023-28-12-06-success.log",
+            "hash": "7d7be0cb8296eff0e017da031a2929f6dce5faec4fd2892651318183465f9d6e"
+        },
+        {
+            "date": 1703734439931,
+            "name": "C:\\level two course\\explore-microservices\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2023-28-12-09-success.log",
+            "hash": "ac9ab9a6bfbfcfc3a524993df308c6805568aa3243f4396c706131025c5b2055"
         }
     ],
     "hashType": "sha256"
