@@ -3,5 +3,6 @@ import { OfferedCourseSectionController } from './offeredCourseSection.controlle
 
 const router = express.Router();
 router.post('/create', OfferedCourseSectionController.insertIntoDB);
+router.get('/', OfferedCourseSectionController.getAllFromDB);
 
 export const OfferedCourseSectionRoutes = router;

@@ -304,6 +304,36 @@
             "date": 1703865362843,
             "name": "C:\\level two course\\explore-microservices\\university-management-core-service-starter\\logs\\winston\\errors\\phu-2023-29-12-21-error.log",
             "hash": "14c3b99267f7e889f7eca0e76114c9e3d4c10ccec7b7fe523525fdb786f8c1d7"
+        },
+        {
+            "date": 1703912079672,
+            "name": "C:\\level two course\\explore-microservices\\university-management-core-service-starter\\logs\\winston\\errors\\phu-2023-30-12-10-error.log",
+            "hash": "e09b4f24af91d87d96a5e6b6b1af5616df0534e4ece53e9560d4c01d50962b6c"
+        },
+        {
+            "date": 1703913649237,
+            "name": "C:\\level two course\\explore-microservices\\university-management-core-service-starter\\logs\\winston\\errors\\phu-2023-30-12-11-error.log",
+            "hash": "32d3c50b2fb91e831603464188d49edf9a9fcbb35be63c80b678c604c11470af"
+        },
+        {
+            "date": 1703916456778,
+            "name": "C:\\level two course\\explore-microservices\\university-management-core-service-starter\\logs\\winston\\errors\\phu-2023-30-12-12-error.log",
+            "hash": "2928a1fa69fe74c47773df7cbd133889217aecbc5dd4b6a8e258d012a2897e1e"
+        },
+        {
+            "date": 1703926061186,
+            "name": "C:\\level two course\\explore-microservices\\university-management-core-service-starter\\logs\\winston\\errors\\phu-2023-30-12-14-error.log",
+            "hash": "3dcd1e8147c190dad1f9f2fe0f6129834399527e8d6583e45a7f2ff5a12b82b3"
+        },
+        {
+            "date": 1703951897314,
+            "name": "C:\\level two course\\explore-microservices\\university-management-core-service-starter\\logs\\winston\\errors\\phu-2023-30-12-21-error.log",
+            "hash": "0569ecbac5eecc5d47cd5d114f768b949d1eb9bc5f55b820770ed05568b4b044"
+        },
+        {
+            "date": 1703952070974,
+            "name": "C:\\level two course\\explore-microservices\\university-management-core-service-starter\\logs\\winston\\errors\\phu-2023-30-12-22-error.log",
+            "hash": "8508381402eb3856d3f6a4bedae9fc75fdb48a30062425476aabfae75b6d104f"
         }
     ],
     "hashType": "sha256"

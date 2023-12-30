@@ -304,6 +304,36 @@
             "date": 1703865362832,
             "name": "C:\\level two course\\explore-microservices\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2023-29-12-21-success.log",
             "hash": "d146f0608c00ce5a5098b1d30fbc2cd70486cf771bbd6409b1d7548231dc520a"
+        },
+        {
+            "date": 1703912079662,
+            "name": "C:\\level two course\\explore-microservices\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2023-30-12-10-success.log",
+            "hash": "875869f1473b676f19b7a3adb2172ced448c3a45bcd409bd652c513c94c9d8f4"
+        },
+        {
+            "date": 1703913649226,
+            "name": "C:\\level two course\\explore-microservices\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2023-30-12-11-success.log",
+            "hash": "f37b2643b7c474176eec58408067b3c74ef5d625f564861c9d57a716a2e25176"
+        },
+        {
+            "date": 1703916456768,
+            "name": "C:\\level two course\\explore-microservices\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2023-30-12-12-success.log",
+            "hash": "d6a58291388b2b90199f88fac5bd1144bf8d54eea840e6b8019f55f59c98c84d"
+        },
+        {
+            "date": 1703926061169,
+            "name": "C:\\level two course\\explore-microservices\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2023-30-12-14-success.log",
+            "hash": "6f3182cae0349b511963c662ea634e120f980300e8dc7c0b216fc793f96fe7aa"
+        },
+        {
+            "date": 1703951897282,
+            "name": "C:\\level two course\\explore-microservices\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2023-30-12-21-success.log",
+            "hash": "738b92703804c58d7c56d3bd42ef0755ea66dc5fa9e8112608d74f482b8b7558"
+        },
+        {
+            "date": 1703952070963,
+            "name": "C:\\level two course\\explore-microservices\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2023-30-12-22-success.log",
+            "hash": "d5ebe0b5775dafd2ada8ed69b990197f7be2691a51d6f33e9dad90c8de644a69"
         }
     ],
     "hashType": "sha256"

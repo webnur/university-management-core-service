@@ -101,6 +101,7 @@ model Faculty {
   academicFaculty AcademicFaculty @relation(fields: [academicFacultyId], references: [id])
   academicFacultyId String
   courses CourseFaculty[]
+  offeredCourseClassSchedules OfferedCourseClassSchedule[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -125,6 +126,7 @@ model Room {
   updatedAt DateTime @updatedAt
   building Building @relation(fields: [buildingId], references: [id])
   buildingId String
+  offeredCourseClassSchedules  OfferedCourseClassSchedule[]
 
   @@map("rooms")
   
@@ -176,6 +178,7 @@ model SemesterRegistration {
   academicSemister AcademicSemester @relation(fields: [academicSemisterId], references: [id])
   offeredCourse OfferedCourses[]
   offeredCourseSections OfferedCourseSection[]
+  offeredCourseClassSchedules  OfferedCourseClassSchedule[]
 
   @@map("semester_Registrations")
 
@@ -215,7 +218,36 @@ model OfferedCourseSection {
   offerCourse OfferedCourses @relation(fields: [offeredCourseId], references: [id])
   semesterRegistrationId String
   semesterRegistration SemesterRegistration @relation(fields: [semesterRegistrationId], references: [id])
+  offeredCourseClassSchedules  OfferedCourseClassSchedule[]
 
   @@map("offered_course_sections")
 
+}
+
+model OfferedCourseClassSchedule {
+  id String @id @default(uuid())
+  startTime String
+  endTime String
+  dayOfWeek WeekDays @default(SATURDAY)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  offeredCourseSectionId String
+  offerCourseSection OfferedCourseSection @relation(fields: [offeredCourseSectionId], references: [id])
+  semesterRegistrationId String
+  semesterRegistration SemesterRegistration @relation(fields: [semesterRegistrationId], references: [id])
+  roomId String
+  room Room @relation(fields: [roomId], references: [id])
+  facultyId String
+  faculty Faculty @relation(fields: [facultyId], references: [id])
+  @@map("offered_course_class_schedules")
+}
+
+enum WeekDays {
+  SATURDAY
+  SUNDAY
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
 }

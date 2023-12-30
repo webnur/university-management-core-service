@@ -15,6 +15,18 @@ const insertIntoDB = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
+  const result = await OfferedCourseSectionService.getAllFromDB();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'get all offerd course section successfully',
+    data: result,
+  });
+});
+
 export const OfferedCourseSectionController = {
   insertIntoDB,
+  getAllFromDB,
 };
