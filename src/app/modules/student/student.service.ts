@@ -11,7 +11,14 @@ import {
 import { IStudentFilterRequest } from './student.interface';
 
 const createStudent = async (data: Student): Promise<Student> => {
-  const result = await prisma.student.create({ data });
+  const result = await prisma.student.create({
+    data,
+    include: {
+      academicSemester: true,
+      academicFaculty: true,
+      academicDepartment: true,
+    },
+  });
   return result;
 };
 

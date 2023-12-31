@@ -7,7 +7,7 @@ export const studentFilterableFields: string[] = [
   'bloodGroup',
   'gender',
   'academicFacultyId',
-  'academicDepartmentId',
+  'academicDepartmentID',
   'academicSemesterId',
 ];
 
@@ -22,11 +22,11 @@ export const studentSearchableFields: string[] = [
 
 export const studentRelationalFields: string[] = [
   'academicFacultyId',
-  'academicDepartmentId',
+  'academicDepartmentID',
   'academicSemesterId',
 ];
 export const studentRelationalFieldsMapper: { [key: string]: string } = {
   academicFacultyId: 'academicFaculty',
-  academicDepartmentId: 'academicDepartment',
+  academicDepartmentID: 'academicDepartment',
   academicSemesterId: 'academicSemester',
 };
