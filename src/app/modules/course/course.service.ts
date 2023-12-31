@@ -78,6 +78,28 @@ const getAllCourse = async () => {
   return result;
 };
 
+const getSignleCourse = async (id: string): Promise<Course | null> => {
+  const result = await prisma.course.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      preRequisite: {
+        include: {
+          preRequisite: true,
+        },
+      },
+      prerequisiteFor: {
+        include: {
+          course: true,
+        },
+      },
+    },
+  });
+
+  return result;
+};
+
 const updateCourse = async (
   id: string,
   payload: ICourseCreateData
@@ -183,6 +205,28 @@ const updateCourse = async (
   return responseData;
 };
 
+const deleteCourse = async (id: string): Promise<Course> => {
+  await prisma.courseToPrerequisite.deleteMany({
+    where: {
+      OR: [
+        {
+          courseId: id,
+        },
+        {
+          prerequisiteId: id,
+        },
+      ],
+    },
+  });
+
+  const result = await prisma.course.delete({
+    where: {
+      id,
+    },
+  });
+  return result;
+};
+
 const assignFaculties = async (
   id: string,
   payload: string[]
@@ -234,7 +278,9 @@ const removeFaculties = async (
 export const CourseService = {
   createCourse,
   getAllCourse,
+  getSignleCourse,
   updateCourse,
+  deleteCourse,
   assignFaculties,
   removeFaculties,
 };

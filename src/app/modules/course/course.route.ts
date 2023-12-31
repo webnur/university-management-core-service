@@ -8,10 +8,24 @@ import { CourseValidation } from './course.validation';
 const router = express.Router();
 
 router.get('/', CourseController.getAllCourse);
-router.get('/:id');
-router.post('/create', CourseController.createCourse);
-router.patch('/:id', CourseController.updateCourse);
-router.delete('/:id');
+router.get('/:id', CourseController.getSingleCourse);
+router.post(
+  '/create',
+  validateRequest(CourseValidation.create),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  CourseController.createCourse
+);
+router.patch(
+  '/:id',
+  validateRequest(CourseValidation.update),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  CourseController.updateCourse
+);
+router.delete(
+  '/:id',
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  CourseController.deleteCourse
+);
 router.post(
   '/:id/assign-faculty',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),

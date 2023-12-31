@@ -26,6 +26,18 @@ const getAllCourse = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getSingleCourse = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await CourseService.getSignleCourse(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'get single course successfully!',
+    data: result,
+  });
+});
+
 const updateCourse = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await CourseService.updateCourse(id, req.body);
@@ -33,6 +45,17 @@ const updateCourse = catchAsync(async (req: Request, res: Response) => {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Course updated successfully',
+    data: result,
+  });
+});
+
+const deleteCourse = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await CourseService.deleteCourse(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Course deleted successfully',
     data: result,
   });
 });
@@ -62,7 +85,9 @@ const removeFaculties = catchAsync(async (req: Request, res: Response) => {
 export const CourseController = {
   createCourse,
   getAllCourse,
+  getSingleCourse,
   updateCourse,
+  deleteCourse,
   assignFaculties,
   removeFaculties,
 };
