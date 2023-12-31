@@ -14,6 +14,15 @@ const create = z.object({
   }),
 });
 
+const update = z.object({
+  body: z.object({
+    roomNumber: z.string().optional(),
+    floor: z.string().optional(),
+    buildingId: z.string().optional(),
+  }),
+});
+
 export const RoomValidation = {
   create,
+  update,
 };

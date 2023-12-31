@@ -17,6 +17,7 @@ router.post(
 router.patch(
   '/:id',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  validateRequest(RoomValidation.update),
   RoomController.updateRoom
 );
 router.delete(
