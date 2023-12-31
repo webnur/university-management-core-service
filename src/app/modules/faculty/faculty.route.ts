@@ -16,6 +16,7 @@ router.post(
 );
 router.patch(
   '/:id',
+  validateRequest(FacultyValidation.update),
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
   FacultyController.updateFaculty
 );

@@ -39,6 +39,23 @@ const create = z.object({
   }),
 });
 
+const update = z.object({
+  body: z.object({
+    facultyId: z.string().optional(),
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
+    middleName: z.string().optional(),
+    profileImage: z.string().optional(),
+    email: z.string().optional(),
+    contactNo: z.string().optional(),
+    gender: z.string().optional(),
+    designation: z.string().optional(),
+    bloodGroup: z.string().optional(),
+    academicDepartmentID: z.string().optional(),
+    academicFacultyId: z.string().optional(),
+  }),
+});
+
 const assignOrRemoveCoruses = z.object({
   body: z.object({
     courses: z.array(z.string(), {
@@ -49,5 +66,6 @@ const assignOrRemoveCoruses = z.object({
 
 export const FacultyValidation = {
   create,
+  update,
   assignOrRemoveCoruses,
 };

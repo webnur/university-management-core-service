@@ -3,20 +3,27 @@ import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
-import { IStudentFilterRequest } from '../student/student.interface';
+
 import {
   facultyRelationalFields,
   facultyRelationalFieldsMapper,
   facultySearchableFields,
 } from './faculty.constants';
+import { IFacultyFilterRequest } from './faculty.interface';
 
 const createFaculty = async (data: Faculty): Promise<Faculty> => {
-  const result = await prisma.faculty.create({ data });
+  const result = await prisma.faculty.create({
+    data,
+    include: {
+      academicFaculty: true,
+      academicDepartment: true,
+    },
+  });
   return result;
 };
 
 const getAllFaculty = async (
-  filters: IStudentFilterRequest,
+  filters: IFacultyFilterRequest,
   options: IPaginationOptions
 ): Promise<IGenericResponse<Faculty[]>> => {
   const { page, limit, skip } = paginationHelpers.calculatePagination(options);
@@ -79,6 +86,10 @@ const getSingleFaculty = async (id: string): Promise<Faculty | null> => {
   const result = await prisma.faculty.findUnique({
     where: {
       id,
+    },
+    include: {
+      academicFaculty: true,
+      academicDepartment: true,
     },
   });
 

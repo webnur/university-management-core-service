@@ -8,7 +8,7 @@ export const facultyFilterableFields: string[] = [
   'gender',
   'designation',
   'academicFacultyId',
-  'academicDepartmentId',
+  'academicDepartmentID ',
 ];
 
 export const facultySearchableFields: string[] = [
@@ -23,9 +23,9 @@ export const facultySearchableFields: string[] = [
 
 export const facultyRelationalFields: string[] = [
   'academicFacultyId',
-  'academicDepartmentId',
+  'academicDepartmentID',
 ];
 export const facultyRelationalFieldsMapper: { [key: string]: string } = {
   academicFacultyId: 'academicFaculty',
-  academicDepartmentId: 'academicDepartment',
+  academicDepartmentID: 'academicDepartment',
 };
