@@ -14,7 +14,10 @@ import {
   semesterRegistrationRelationalFieldsMapper,
   semesterRegistrationSearchableFields,
 } from './semesterRegistration.constants';
-import { ISemesterRegistrationFilterRequest } from './semesterRegistration.interface';
+import {
+  IEnrollCoursePayload,
+  ISemesterRegistrationFilterRequest,
+} from './semesterRegistration.interface';
 
 const insertIntoDb = async (
   data: SemesterRegistration
@@ -39,7 +42,12 @@ const insertIntoDb = async (
       `There is already an ${isanySemesterRegUpcomingOrOngoing.status} registration`
     );
   }
-  const result = await prisma.semesterRegistration.create({ data });
+  const result = await prisma.semesterRegistration.create({
+    data,
+    include: {
+      academicSemister: true,
+    },
+  });
   return result;
 };
 
@@ -258,6 +266,41 @@ const deleteOneFromDB = async (id: string) => {
   return result;
 };
 
+const enrolledIntoCourse = async (
+  authUserId: string,
+  payload: IEnrollCoursePayload
+) => {
+  // console.log(authUserId);
+  const studentInfo = await prisma.student.findFirst({
+    where: {
+      studentId: authUserId,
+    },
+  });
+  if (!studentInfo) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'student not found');
+  }
+
+  const semesterRegistrationInfo = await prisma.semesterRegistration.findFirst({
+    where: {
+      status: SemesterRegistrationStatus.ONGOING,
+    },
+  });
+  if (!semesterRegistrationInfo) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'semester register not found');
+  }
+
+  const enrollCoruse = await prisma.studentSemesterRegistrationCourse.create({
+    data: {
+      studentId: studentInfo?.id,
+      semesterRegistrationId: semesterRegistrationInfo?.id,
+      offeredCourseId: payload.offeredCourseId,
+      offeredCourseSectionId: payload.offeredCourseSectionId,
+    },
+  });
+
+  return enrollCoruse;
+};
+
 export const SemesterRegistrationService = {
   insertIntoDb,
   getAllFromDb,
@@ -265,4 +308,5 @@ export const SemesterRegistrationService = {
   updateOneInDB,
   deleteOneFromDB,
   startMyRegistration,
+  enrolledIntoCourse,
 };

@@ -79,6 +79,7 @@ model Student {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   studentSemesterRegistrations StudentSemesterRegistration[]
+  studentSemesterRegistrationCourse StudentSemesterRegistrationCourse[]
 
   @@map("students")
 
@@ -181,6 +182,7 @@ model SemesterRegistration {
   offeredCourseSections OfferedCourseSection[]
   offeredCourseClassSchedules  OfferedCourseClassSchedule[]
   studentSemesterRegistrations StudentSemesterRegistration[]
+  studentSemesterRegistrationCourse  StudentSemesterRegistrationCourse[]
 
   @@map("semester_Registrations")
 
@@ -203,6 +205,7 @@ model OfferedCourses {
   semesterRegistrationId String
   semesterRegistration SemesterRegistration @relation(fields: [semesterRegistrationId], references: [id])
   offeredCourseSections OfferedCourseSection[]
+  studentSemesterRegistrationCourse  StudentSemesterRegistrationCourse[]
 
   @@map("offered_courses")
 
@@ -221,6 +224,7 @@ model OfferedCourseSection {
   semesterRegistrationId String
   semesterRegistration SemesterRegistration @relation(fields: [semesterRegistrationId], references: [id])
   offeredCourseClassSchedules  OfferedCourseClassSchedule[]
+  studentSemesterRegistrationCourse  StudentSemesterRegistrationCourse[]
 
   @@map("offered_course_sections")
 
@@ -266,4 +270,20 @@ model StudentSemesterRegistration {
   semesterRegistration SemesterRegistration @relation(fields: [semesterRegistrationId], references: [id])
 
 @@map("student_semester_registrations")
+}
+
+model StudentSemesterRegistrationCourse {
+  semesterRegistrationId String
+  semesterRegistration SemesterRegistration @relation(fields: [semesterRegistrationId], references: [id])
+  studentId String
+  course Student @relation(fields: [studentId], references: [id])
+  offeredCourseId String
+  offeredCourse OfferedCourses @relation(fields: [offeredCourseId], references: [id])
+  offeredCourseSectionId String
+  offeredCourseSection OfferedCourseSection @relation(fields: [offeredCourseSectionId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@id([semesterRegistrationId, studentId, offeredCourseId])
+
+  @@map("student_semester_registration_course")
 }
