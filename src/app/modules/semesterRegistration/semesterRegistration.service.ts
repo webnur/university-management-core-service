@@ -277,7 +277,7 @@ const enrolledIntoCourse = async (
     },
   });
   if (!studentInfo) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'student not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'student not found');
   }
 
   const semesterRegistrationInfo = await prisma.semesterRegistration.findFirst({
@@ -286,19 +286,82 @@ const enrolledIntoCourse = async (
     },
   });
   if (!semesterRegistrationInfo) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'semester register not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'semester register not found');
   }
 
-  const enrollCoruse = await prisma.studentSemesterRegistrationCourse.create({
-    data: {
-      studentId: studentInfo?.id,
-      semesterRegistrationId: semesterRegistrationInfo?.id,
-      offeredCourseId: payload.offeredCourseId,
-      offeredCourseSectionId: payload.offeredCourseSectionId,
+  const offeredCourse = await prisma.offeredCourses.findFirst({
+    where: {
+      id: payload.offeredCourseId,
+    },
+    include: {
+      course: true,
     },
   });
+  if (!offeredCourse) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'offered course not found');
+  }
 
-  return enrollCoruse;
+  const offeredCourseSection = await prisma.offeredCourseSection.findFirst({
+    where: {
+      id: payload.offeredCourseSectionId,
+    },
+  });
+  if (!offeredCourseSection) {
+    throw new ApiError(
+      httpStatus.NOT_FOUND,
+      'offered course section not found'
+    );
+  }
+
+  if (
+    offeredCourseSection.maxcapacity &&
+    offeredCourseSection.currentEnrolledStudent &&
+    offeredCourseSection.currentEnrolledStudent >=
+      offeredCourseSection.maxcapacity
+  ) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'students capacity is full!');
+  }
+
+  await prisma.$transaction(async transationClinet => {
+    await transationClinet.studentSemesterRegistrationCourse.create({
+      data: {
+        studentId: studentInfo?.id,
+        semesterRegistrationId: semesterRegistrationInfo?.id,
+        offeredCourseId: payload.offeredCourseId,
+        offeredCourseSectionId: payload.offeredCourseSectionId,
+      },
+    });
+
+    await transationClinet.offeredCourseSection.update({
+      where: {
+        id: payload.offeredCourseSectionId,
+      },
+      data: {
+        currentEnrolledStudent: {
+          increment: 1,
+        },
+      },
+    });
+
+    await transationClinet.studentSemesterRegistration.updateMany({
+      where: {
+        student: {
+          id: studentInfo.id,
+        },
+        semesterRegistration: {
+          id: semesterRegistrationInfo.id,
+        },
+      },
+      data: {
+        totalCreditsTaken: {
+          increment: offeredCourse.course.credits,
+        },
+      },
+    });
+  });
+  return {
+    message: 'successfully enrolled into course',
+  };
 };
 
 export const SemesterRegistrationService = {
