@@ -11,10 +11,15 @@ router.post(
   auth(ENUM_USER_ROLE.STUDENT),
   SemesterRegistrationController.startMyRegistration
 );
-
+router.get(
+  '/get-my-registration',
+  auth(ENUM_USER_ROLE.STUDENT),
+  SemesterRegistrationController.getMyRegistration
+);
 router.get('/', SemesterRegistrationController.getAllFromDb);
 
 router.get('/:id', SemesterRegistrationController.getSingleFromDB);
+
 router.post(
   '/create',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
