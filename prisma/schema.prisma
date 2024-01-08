@@ -23,6 +23,7 @@ model AcademicSemester {
   code String
   startMonth String
   endMonth String
+  isCurrent Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   students Student[]
@@ -276,7 +277,7 @@ model StudentSemesterRegistrationCourse {
   semesterRegistrationId String
   semesterRegistration SemesterRegistration @relation(fields: [semesterRegistrationId], references: [id])
   studentId String
-  course Student @relation(fields: [studentId], references: [id])
+  student Student @relation(fields: [studentId], references: [id])
   offeredCourseId String
   offeredCourse OfferedCourses @relation(fields: [offeredCourseId], references: [id])
   offeredCourseSectionId String
