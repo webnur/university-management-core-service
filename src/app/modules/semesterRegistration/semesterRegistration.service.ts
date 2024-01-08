@@ -290,6 +290,72 @@ const withdrawFromCourse = async (
     payload
   );
 };
+
+const confirmMyRegistration = async (
+  authUserId: string
+): Promise<{ message: string }> => {
+  const semesterRegistration = await prisma.semesterRegistration.findFirst({
+    where: {
+      status: SemesterRegistrationStatus.ONGOING,
+    },
+  });
+
+  const studentSemesterRegistration =
+    await prisma.studentSemesterRegistration.findFirst({
+      where: {
+        semesterRegistration: {
+          id: semesterRegistration?.id,
+        },
+        student: {
+          studentId: authUserId,
+        },
+      },
+    });
+
+  if (!studentSemesterRegistration) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'you are not recognized for this semester!'
+    );
+  }
+
+  if (studentSemesterRegistration.totalCreditsTaken === 0) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'you are not enrolled any course!'
+    );
+  }
+
+  if (
+    studentSemesterRegistration.totalCreditsTaken &&
+    semesterRegistration?.maxCradit &&
+    semesterRegistration.minCradit &&
+    (studentSemesterRegistration.totalCreditsTaken <
+      semesterRegistration.minCradit ||
+      studentSemesterRegistration.totalCreditsTaken >
+        semesterRegistration.maxCradit)
+  ) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      `you can take only ${semesterRegistration.minCradit} to ${semesterRegistration.maxCradit} cradits`
+    );
+  }
+
+  await prisma.studentSemesterRegistration.update({
+    where: {
+      id: studentSemesterRegistration.id,
+    },
+    data: {
+      isConfirmed: true,
+    },
+  });
+  // console.log('semester ragistration', semesterRegistration);
+  // console.log('student semester ragistration', studentSemesterRegistration);
+  return {
+    message: 'your registration is confirmed!',
+  };
+};
+
 export const SemesterRegistrationService = {
   insertIntoDb,
   getAllFromDb,
@@ -299,4 +365,5 @@ export const SemesterRegistrationService = {
   startMyRegistration,
   enrolledIntoCourse,
   withdrawFromCourse,
+  confirmMyRegistration,
 };
