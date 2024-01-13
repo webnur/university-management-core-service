@@ -28,6 +28,7 @@ model AcademicSemester {
   updatedAt DateTime @updatedAt
   students Student[]
   semesterRegistrations SemesterRegistration[]
+  studentEnrolledCourses StudentEnrolledCourse[]
 
   @@map("academic_semesters")
 }
@@ -81,6 +82,7 @@ model Student {
   updatedAt DateTime @updatedAt
   studentSemesterRegistrations StudentSemesterRegistration[]
   studentSemesterRegistrationCourse StudentSemesterRegistrationCourse[]
+  studentEnrolledCourses StudentEnrolledCourse[]
 
   @@map("students")
 
@@ -146,6 +148,7 @@ model Course {
   prerequisiteFor CourseToPrerequisite[] @relation("PrerequisiteToCourse")
   faculties CourseFaculty[]
   offeredCourse OfferedCourses[]
+  studentEnrolledCourses StudentEnrolledCourse[]
   @@map("courses")
 }
 
@@ -287,4 +290,26 @@ model StudentSemesterRegistrationCourse {
   @@id([semesterRegistrationId, studentId, offeredCourseId])
 
   @@map("student_semester_registration_course")
+}
+
+model StudentEnrolledCourse {
+  id String @id @default(uuid())
+  studentId String
+  student Student @relation(fields: [studentId], references: [id])
+  courseId String
+  course Course @relation(fields: [courseId], references: [id])
+  academicSemesterId String
+  academicSemester AcademicSemester @relation(fields: [academicSemesterId], references: [id])
+  grade String?
+  point Float ? @default(0)
+  totalMarks Int @default(0)
+  status StudentEnrolledCourseStatus @default(ONGOING)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum StudentEnrolledCourseStatus {
+  ONGOING
+  COMPLETED
+  WITHDRAWN
 }
