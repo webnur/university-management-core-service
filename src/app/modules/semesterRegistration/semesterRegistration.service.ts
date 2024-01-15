@@ -13,6 +13,7 @@ import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
 import { asyncForEach } from '../../../shared/utils';
+import { StudentEnrolledCourseMarkService } from '../studentEnrolledCourseMark/studentEnrolledCourseMark.service';
 import { StudentSemesterPaymentService } from '../studentSemesterPayment/studentSemesterPayment.service';
 import { StudentSemesterRegistrationCourseService } from '../studentSemesterRegistrationCourse/StudentSemesterRegistrationCourse.service';
 import {
@@ -502,9 +503,20 @@ const startNewSemester = async (id: string): Promise<{ message: string }> => {
                 courseId: item.offeredCourse.courseId,
                 academicSemesterId: semesterRegistration.academicSemisterId,
               };
-              await prismaTransactionClient.studentEnrolledCourse.create({
-                data: enrolledCourseData,
-              });
+
+              const studentEnrolledCourseData =
+                await prismaTransactionClient.studentEnrolledCourse.create({
+                  data: enrolledCourseData,
+                });
+
+              await StudentEnrolledCourseMarkService.createStudentEnrolledCourseDefaultMark(
+                prismaTransactionClient,
+                {
+                  studentId: item.studentId,
+                  studentEnrolledCourseId: studentEnrolledCourseData.id,
+                  academicSemesterId: semesterRegistration.academicSemisterId,
+                }
+              );
             }
           }
         );
