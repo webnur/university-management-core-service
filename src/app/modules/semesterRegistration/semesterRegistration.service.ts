@@ -13,6 +13,7 @@ import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
 import { asyncForEach } from '../../../shared/utils';
+import { StudentSemesterPaymentService } from '../studentSemesterPayment/studentSemesterPayment.service';
 import { StudentSemesterRegistrationCourseService } from '../studentSemesterRegistrationCourse/StudentSemesterRegistrationCourse.service';
 import {
   semesterRegistrationRelationalFields,
@@ -446,24 +447,38 @@ const startNewSemester = async (id: string): Promise<{ message: string }> => {
     asyncForEach(
       studentSemesterRegistrations,
       async (studentSemReg: StudentSemesterRegistration) => {
+        if (studentSemReg.totalCreditsTaken) {
+          const totalPaymentAmount = studentSemReg.totalCreditsTaken * 5000;
+          await StudentSemesterPaymentService.createSemesterPayment(
+            prismaTransactionClient,
+            {
+              studentId: studentSemReg.studentId,
+              academicSemesterId: semesterRegistration.academicSemisterId,
+              totalPaymentAmount: totalPaymentAmount,
+            }
+          );
+        }
+
         const studentSemesterRegistrationCourse =
-          await prisma.studentSemesterRegistrationCourse.findMany({
-            where: {
-              semesterRegistration: {
-                id,
-              },
-              student: {
-                id: studentSemReg.studentId,
-              },
-            },
-            include: {
-              offeredCourse: {
-                include: {
-                  course: true,
+          await prismaTransactionClient.studentSemesterRegistrationCourse.findMany(
+            {
+              where: {
+                semesterRegistration: {
+                  id,
+                },
+                student: {
+                  id: studentSemReg.studentId,
                 },
               },
-            },
-          });
+              include: {
+                offeredCourse: {
+                  include: {
+                    course: true,
+                  },
+                },
+              },
+            }
+          );
         console.log(studentSemesterRegistrationCourse);
 
         asyncForEach(
@@ -474,7 +489,7 @@ const startNewSemester = async (id: string): Promise<{ message: string }> => {
             }
           ) => {
             const isExistEnrollData =
-              await prisma.studentEnrolledCourse.findFirst({
+              await prismaTransactionClient.studentEnrolledCourse.findFirst({
                 where: {
                   studentId: item.studentId,
                   courseId: item.offeredCourse.courseId,
@@ -487,7 +502,7 @@ const startNewSemester = async (id: string): Promise<{ message: string }> => {
                 courseId: item.offeredCourse.courseId,
                 academicSemesterId: semesterRegistration.academicSemisterId,
               };
-              await prisma.studentEnrolledCourse.create({
+              await prismaTransactionClient.studentEnrolledCourse.create({
                 data: enrolledCourseData,
               });
             }

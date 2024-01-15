@@ -29,6 +29,8 @@ model AcademicSemester {
   students Student[]
   semesterRegistrations SemesterRegistration[]
   studentEnrolledCourses StudentEnrolledCourse[]
+  studentEnrolledCourseMarks  StudentEnrolledCourseMark[]
+  studentSemesterPayments StudentSemesterPayment[]
 
   @@map("academic_semesters")
 }
@@ -83,6 +85,8 @@ model Student {
   studentSemesterRegistrations StudentSemesterRegistration[]
   studentSemesterRegistrationCourse StudentSemesterRegistrationCourse[]
   studentEnrolledCourses StudentEnrolledCourse[]
+  studentEnrolledCourseMarks  StudentEnrolledCourseMark[]
+  studentSemesterPayments StudentSemesterPayment[]
 
   @@map("students")
 
@@ -304,12 +308,60 @@ model StudentEnrolledCourse {
   point Float ? @default(0)
   totalMarks Int @default(0)
   status StudentEnrolledCourseStatus @default(ONGOING)
+  studentEnrolledCourseMarks  StudentEnrolledCourseMark[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("student_enrolled_Courses")
 }
 
 enum StudentEnrolledCourseStatus {
   ONGOING
   COMPLETED
   WITHDRAWN
+}
+
+model StudentEnrolledCourseMark {
+  id String @id @default(uuid())
+  studentId String
+  student Student @relation(fields: [studentId], references: [id])
+  studentEnrolledCourseId String
+  studentEnrolledCourse StudentEnrolledCourse @relation(fields: [studentEnrolledCourseId], references: [id])
+  academicSemesterId String
+  academicSemester AcademicSemester @relation(fields: [academicSemesterId], references: [id])
+  grade String?
+  marks Int?
+  examType ExamType? @default(MIDTERM)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("student_enrolled_course_marks")
+}
+
+enum ExamType {
+  MIDTERM
+  FINAL
+}
+
+model StudentSemesterPayment {
+  id String @id @default(uuid())
+  studentId String
+  student Student @relation(fields: [studentId], references: [id])
+  academicSemesterId String
+  academicSemester AcademicSemester @relation(fields: [academicSemesterId], references: [id])
+  fullPaymentAmount Int? @default(0)
+  partialPaymentAmount Int? @default(0)
+  totalDueAmount Int? @default(0)
+  totalpaidAmount Int? @default(0)
+  paymentStatus PaymentStatus? @default(PENDING)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("student_semester_payments")
+}
+
+enum PaymentStatus {
+  PENDING
+  PARTIAL_PAID
+  FULL_FAID
 }
