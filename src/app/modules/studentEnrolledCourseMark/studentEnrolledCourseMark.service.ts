@@ -1,4 +1,8 @@
-import { ExamType, PrismaClient } from '@prisma/client';
+import {
+  ExamType,
+  PrismaClient,
+  StudentEnrolledCourseStatus,
+} from '@prisma/client';
 import {
   DefaultArgs,
   PrismaClientOptions,
@@ -100,7 +104,6 @@ const createStudentEnrolledCourseDefaultMark = async (
 };
 
 const updateStudentMark = async (payload: any) => {
-  console.log(payload);
   const { studentId, academicSemesterId, courseId, examType, marks } = payload;
 
   const studentEnrolledCourseMark =
@@ -142,7 +145,90 @@ const updateStudentMark = async (payload: any) => {
 
   return updateStudentMarks;
 };
+
+const updateFinalMark = async (payload: any) => {
+  const { studentId, academicSemesterId, courseId } = payload;
+
+  const studentEnrolledCourse = await prisma.studentEnrolledCourse.findFirst({
+    where: {
+      student: {
+        id: studentId,
+      },
+      academicSemester: {
+        id: academicSemesterId,
+      },
+      course: {
+        id: courseId,
+      },
+    },
+  });
+
+  if (!studentEnrolledCourse) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'student enrolled course data not found'
+    );
+  }
+
+  const studentEnrolledCourseMarks =
+    await prisma.studentEnrolledCourseMark.findMany({
+      where: {
+        student: {
+          id: studentId,
+        },
+        academicSemester: {
+          id: academicSemesterId,
+        },
+        studentEnrolledCourse: {
+          course: {
+            id: courseId,
+          },
+        },
+      },
+    });
+
+  if (!studentEnrolledCourseMarks.length) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'student Enrolled Course Marks Not Found!'
+    );
+  }
+
+  const midTermMarks =
+    studentEnrolledCourseMarks.find(item => item.examType === ExamType.MIDTERM)
+      ?.marks || 0;
+  const finalTermMarks =
+    studentEnrolledCourseMarks.find(item => item.examType === ExamType.FINAL)
+      ?.marks || 0;
+
+  const totalFinalMarks =
+    Math.ceil(midTermMarks * 0.4) + Math.ceil(finalTermMarks * 0.6);
+
+  const result =
+    StudentEnrolledCourseMarkUtils.getGradeFromMarks(totalFinalMarks);
+
+  await prisma.studentEnrolledCourse.updateMany({
+    where: {
+      student: {
+        id: studentId,
+      },
+      academicSemester: {
+        id: academicSemesterId,
+      },
+      course: {
+        id: courseId,
+      },
+    },
+    data: {
+      grade: result.grade,
+      point: result.point,
+      totalMarks: totalFinalMarks,
+      status: StudentEnrolledCourseStatus.COMPLETED,
+    },
+  });
+};
 export const StudentEnrolledCourseMarkService = {
   createStudentEnrolledCourseDefaultMark,
   updateStudentMark,
+  updateFinalMark,
 };
