@@ -226,6 +226,54 @@ const updateFinalMark = async (payload: any) => {
       status: StudentEnrolledCourseStatus.COMPLETED,
     },
   });
+
+  //   StudentAcademicInfo update
+  const grades = await prisma.studentEnrolledCourse.findMany({
+    where: {
+      student: {
+        id: studentId,
+      },
+      status: StudentEnrolledCourseStatus.COMPLETED,
+    },
+    include: {
+      course: true,
+    },
+  });
+  const academicResult =
+    await StudentEnrolledCourseMarkUtils.calculateCGPAndGrade(grades);
+
+  const studentAcademicInfo = await prisma.studentAcademicInfo.findFirst({
+    where: {
+      student: {
+        id: studentId,
+      },
+    },
+  });
+  if (studentAcademicInfo) {
+    await prisma.studentAcademicInfo.update({
+      where: {
+        id: studentAcademicInfo.id,
+      },
+      data: {
+        totalCompletedCradits: academicResult.totalCompletedCradits,
+        cgpa: academicResult.cgpa,
+      },
+    });
+  } else {
+    await prisma.studentAcademicInfo.create({
+      data: {
+        student: {
+          connect: {
+            id: studentId,
+          },
+        },
+        totalCompletedCradits: academicResult.totalCompletedCradits,
+        cgpa: academicResult.cgpa,
+      },
+    });
+  }
+
+  return grades;
 };
 export const StudentEnrolledCourseMarkService = {
   createStudentEnrolledCourseDefaultMark,
