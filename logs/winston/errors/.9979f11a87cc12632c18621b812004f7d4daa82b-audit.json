@@ -6,11 +6,6 @@
     "auditLog": "C:\\level two course\\explore-microservices\\university-management-core-service-starter\\logs\\winston\\errors\\.9979f11a87cc12632c18621b812004f7d4daa82b-audit.json",
     "files": [
         {
-            "date": 1704086295682,
-            "name": "C:\\level two course\\explore-microservices\\university-management-core-service-starter\\logs\\winston\\errors\\phu-2024-01-01-11-error.log",
-            "hash": "76e461a33f30b8b8b3fd3dc4a0297678cb9b441c19dba0a061ef2fb250e04b2b"
-        },
-        {
             "date": 1704129140108,
             "name": "C:\\level two course\\explore-microservices\\university-management-core-service-starter\\logs\\winston\\errors\\phu-2024-01-01-23-error.log",
             "hash": "c372631353c98d0e5a8cdf7a271dc434e154c6c068ea99f457a60f5d30c7e341"
@@ -154,6 +149,16 @@
             "date": 1705294623223,
             "name": "C:\\level two course\\explore-microservices\\university-management-core-service-starter\\logs\\winston\\errors\\phu-2024-15-01-10-error.log",
             "hash": "4f521144ad347d5829c2cdb55b45e5573ee0cad23004468ce18085a61a7abb56"
+        },
+        {
+            "date": 1705294810213,
+            "name": "C:\\level two course\\explore-microservices\\university-management-core-service-starter\\logs\\winston\\errors\\phu-2024-15-01-11-error.log",
+            "hash": "5e55701c1119575f2a22ba2d379462b24919a25a7a399eb777c6bceab4e42a79"
+        },
+        {
+            "date": 1705309116153,
+            "name": "C:\\level two course\\explore-microservices\\university-management-core-service-starter\\logs\\winston\\errors\\phu-2024-15-01-14-error.log",
+            "hash": "b258145af8cb0b5f0edb47dfc42e11bcee304612c1a34d0259c6e7ff4a8cb4d9"
         }
     ],
     "hashType": "sha256"
