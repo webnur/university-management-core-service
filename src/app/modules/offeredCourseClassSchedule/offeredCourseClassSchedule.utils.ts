@@ -4,7 +4,7 @@ import ApiError from '../../../errors/ApiError';
 import prisma from '../../../shared/prisma';
 import { hasTimeConflict } from '../../../shared/utils';
 
-const alreadyBookedRoomOnday = async (data: OfferedCourseClassSchedule) => {
+const checkRoomAvailable = async (data: OfferedCourseClassSchedule) => {
   const alreadyBookedRoomOnDay =
     await prisma.offeredCourseClassSchedule.findMany({
       where: {
@@ -38,7 +38,7 @@ const checkFacultyAvailable = async (data: OfferedCourseClassSchedule) => {
       where: {
         dayOfWeek: data.dayOfWeek,
         faculty: {
-          id: data.faultyId,
+          id: data.facultyId,
         },
       },
     });
@@ -60,6 +60,6 @@ const checkFacultyAvailable = async (data: OfferedCourseClassSchedule) => {
 };
 
 export const OfferedCourseClassScheduleUtils = {
-  alreadyBookedRoomOnday,
+  checkRoomAvailable,
   checkFacultyAvailable,
 };
