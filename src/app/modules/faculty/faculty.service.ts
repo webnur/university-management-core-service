@@ -170,6 +170,87 @@ const removeCourses = async (
   return assignCoursesData;
 };
 
+const myCourses = async (
+  authUser: { userId: string; role: string },
+  filter: {
+    academicSemesterId?: string | null | undefined;
+    courseId?: string | null | undefined;
+  }
+) => {
+  if (!filter.academicSemesterId) {
+    const currentSemester = await prisma.academicSemester.findFirst({
+      where: {
+        isCurrent: true,
+      },
+    });
+    filter.academicSemesterId = currentSemester?.id;
+  }
+
+  const offeredCourseSections = await prisma.offeredCourseSection.findMany({
+    where: {
+      offeredCourseClassSchedules: {
+        some: {
+          faculty: {
+            facultyId: authUser.userId,
+          },
+        },
+      },
+      offerCourse: {
+        semesterRegistration: {
+          academicSemister: {
+            id: filter.academicSemesterId,
+          },
+        },
+      },
+    },
+    include: {
+      offerCourse: {
+        include: {
+          course: true,
+        },
+      },
+      offeredCourseClassSchedules: {
+        include: {
+          room: {
+            include: {
+              building: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  // remove duplicated course data
+  const courseAndSchedule = offeredCourseSections.reduce(
+    (acc: any, obj: any) => {
+      const course = obj.offerCourse.course;
+      const classSchedule = obj.offeredCourseClassSchedules;
+      const existingCourse = acc.find(
+        (item: any) => item.course?.id === course?.id
+      );
+      if (existingCourse) {
+        existingCourse.sections.push({
+          section: obj,
+          classSchedule,
+        });
+      } else {
+        acc.push({
+          course,
+          sections: {
+            section: obj,
+            classSchedule,
+          },
+        });
+      }
+      return acc;
+    },
+    []
+  );
+
+  return courseAndSchedule;
+};
+
 export const FacultyService = {
   createFaculty,
   getAllFaculty,
@@ -178,4 +259,5 @@ export const FacultyService = {
   deleteFaculty,
   assignCourses,
   removeCourses,
+  myCourses,
 };
