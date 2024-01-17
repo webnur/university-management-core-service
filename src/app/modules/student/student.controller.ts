@@ -80,7 +80,7 @@ const getMyCourseSchedule = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'get course Schedule data  successfully!',
+    message: 'course Schedule data  successfully!',
     data: result,
   });
 });
